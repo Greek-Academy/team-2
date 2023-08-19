@@ -1,10 +1,14 @@
-import { useSpeaker } from "../../hooks/useSpeaker";
+import {useSpeaker} from "../../hooks/useSpeaker";
 
-export const SpeakerButton = () => {
-  const { state, handlePlay } = useSpeaker();
-  const disabled = !state;
+export type SpeakerButtonProps = {
+    stringToRead?: string;
+}
+export const SpeakerButton = (props: SpeakerButtonProps) => {
+    const {state, handlePlay} = useSpeaker();
+    const disabled = !state || !props.stringToRead;
 
-   return (
-    <button type="button" disabled={disabled} onClick={() => handlePlay('テスト')}>{disabled ? '音声出力非対応' : '音声テスト'}</button>
-  );
+    return (
+        <button type="button" disabled={disabled}
+                onClick={() => handlePlay(props.stringToRead || "テスト")}>{disabled ? '音声出力非対応' : '音声テスト'}</button>
+    );
 };

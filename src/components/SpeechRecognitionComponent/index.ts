@@ -1,1 +1,1 @@
-export * from './SpeechRecognitionComponent';
+export * from './SpeechRecognitionComponent.tsx';
