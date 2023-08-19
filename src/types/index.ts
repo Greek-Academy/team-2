@@ -27,3 +27,8 @@ export enum InputTypes {
   performOperation = 'performOperation',
   clearAll = 'clearAll',
 }
+
+export enum ChatBoxTypes {
+  inputMessage =  'inputMessage',
+  outputMessage = 'outputMessage',
+}
