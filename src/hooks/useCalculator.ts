@@ -41,8 +41,8 @@ export const useCalculator = () => {
     }, [state.displayValue]);
 
     useEffect(() => {
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
+        // document.addEventListener('keydown', handleKeyDown);
+        // return () => document.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
     return {state, handleClick};
