@@ -4,6 +4,7 @@ import { calculatorOperations, digitKeys } from '../../utils/helpers';
 import { CalculatorDisplay } from '../CalculatorDisplay';
 import { CalculatorKey } from '../CalculatorKey';
 import './Calculator.scss';
+import {SpeechRecognitionComponent} from '../SpeechRecognitionComponent/SpeechRecognitionComponent';
 
 export const Calculator = () => {
   const { state, handleClick } = useCalculator();
@@ -11,6 +12,8 @@ export const Calculator = () => {
 
   return (
     <div className="calculator" data-testid="react-mac-calculator">
+    <SpeechRecognitionComponent />
+      
       <CalculatorDisplay value={state.displayValue} />
       <div className="calculator-keypad">
         <div className="input-keys">
