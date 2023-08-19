@@ -1,11 +1,11 @@
 import React from 'react'
 import './App.scss'
-import {Calculator} from "./components/Calculator";
+import { ChatBox } from './components/ChatBox';
 
 const App: React.FC = () => {
     return (
         <div className="app">
-            <Calculator/>
+           <ChatBox />
         </div>
     )
 }
