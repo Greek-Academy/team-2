@@ -1,5 +1,7 @@
 .app {
-  width: 320px;
+  width: 720px;
   height: 470px;
   position: relative;
+  display: flex;
+  flex-direction: row;
 }
