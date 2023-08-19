@@ -8,6 +8,7 @@ import SpeechRecognition, {
 import { useSpeaker } from "../../hooks/useSpeaker.ts"
 import { messageHistoryType } from "../../types/index.ts"
 import { Spinner } from "../Spinner/Spinner.tsx"
+import { MicIcon } from "../MicIcon/MicIcon.tsx"
 
 interface IChatBoxProps {}
 
@@ -20,6 +21,9 @@ export const ChatBox: FC<IChatBoxProps> = () => {
   const { handlePlay } = useSpeaker()
 
   const processThought = async (msg: string) => {
+    if (!msg) {
+      return
+    }
     addHistoryMessage("input", msg)
     resetMessage()
     setLoading(true)
@@ -63,6 +67,14 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     }
   }
 
+  const speechHandle = async () => {
+    if (listening) {
+      stopSpeech()
+    } else {
+      startSpeech()
+    }
+  }
+
   const startSpeech = async () => {
     resetTranscript()
     await SpeechRecognition.startListening({
@@ -94,7 +106,13 @@ export const ChatBox: FC<IChatBoxProps> = () => {
   }
 
   const inputEl = listening ? (
-    <input type="text" readOnly value={transcript} className="chat-box-input" />
+    <input
+      type="text"
+      readOnly
+      value={transcript}
+      className="chat-box-input"
+      style={{ pointerEvents: "none" }}
+    />
   ) : (
     <input
       type="text"
@@ -150,6 +168,15 @@ export const ChatBox: FC<IChatBoxProps> = () => {
 
   return (
     <div className="chat-box">
+      <section className="chat-box-header">
+        <button
+          type="button"
+          className={listening ? "speech-btn rec" : "speech-btn wait"}
+          onClick={speechHandle}
+        >
+          {listening ? "音声入力 終了 ■" : "音声入力 開始 ◉"}
+        </button>
+      </section>
       <section className="chat-box-body" id="chatBoxBody">
         {messageHistories.map((messageHistory, index) => {
           return (
@@ -158,46 +185,12 @@ export const ChatBox: FC<IChatBoxProps> = () => {
             </div>
           )
         })}
+        <MicIcon visible={listening} />
       </section>
       <section className="chat-box-footer">
         {inputEl}
         {submitEl}
       </section>
-      <button
-        onClick={startSpeech}
-        style={{
-          position: "fixed",
-          top: "1rem",
-          left: "40%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        開始
-      </button>
-      <span
-        style={{
-          position: "fixed",
-          top: "1rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          textAlign: "center",
-        }}
-      >
-        音声入力
-        <br />
-        {listening ? "ON" : "OFF"}
-      </span>
-      <button
-        onClick={stopSpeech}
-        style={{
-          position: "fixed",
-          top: "1rem",
-          left: "60%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        終了
-      </button>
 
       <Spinner visible={loading} />
     </div>
