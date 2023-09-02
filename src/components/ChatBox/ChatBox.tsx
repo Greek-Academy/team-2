@@ -9,12 +9,14 @@ import { useSpeaker } from "../../hooks/useSpeaker.ts"
 import { messageHistoryType } from "../../types/index.ts"
 import { Spinner } from "../Spinner/Spinner.tsx"
 import { MicIcon } from "../MicIcon/MicIcon.tsx"
+import { RecognitionSwitch } from "../RecognitionSwitch/RecognitionSwitch.tsx"
 
 interface IChatBoxProps {}
 
 export const ChatBox: FC<IChatBoxProps> = () => {
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
+  const [recoding, setRecoding] = useState(false)
   const [messageHistories, setMessageHistories] = useState<
     messageHistoryType[]
   >([])
@@ -57,7 +59,39 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     }
   }
 
-  const { transcript, listening, resetTranscript } = useSpeechRecognition()
+  const commands = [
+    {
+      command: "スタート",
+      matchInterim: true,
+      callback: () => {
+        if (recoding) {
+          return
+        }
+        console.log("録音開始")
+        resetTranscript()
+        setRecoding(true)
+      },
+    },
+    {
+      command: "ストップ",
+      matchInterim: true,
+      callback: () => {
+        if (!recoding) {
+          return
+        }
+        setRecoding(false)
+        console.log("録音終了")
+        const input = transcript.replace("/(*.)ストップ$/u", "$1")
+        console.log(input)
+        processThought(input)
+        resetTranscript()
+      },
+    },
+  ]
+
+  const { transcript, listening, resetTranscript } = useSpeechRecognition({
+    commands,
+  })
 
   // メッセージが追加されたら、一番最新のメッセージの箇所までスクロールする
   const scrollToCurrentChatBox = () => {
@@ -67,12 +101,17 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     }
   }
 
-  const speechHandle = async () => {
+  // 音声認識APIのON/OFF切り替え
+  const recognitionHandle = () => {
     if (listening) {
       stopSpeech()
     } else {
       startSpeech()
     }
+  }
+
+  const speechHandle = async () => {
+    setRecoding(!recoding)
   }
 
   const startSpeech = async () => {
@@ -84,7 +123,6 @@ export const ChatBox: FC<IChatBoxProps> = () => {
 
   const stopSpeech = async () => {
     await SpeechRecognition.stopListening()
-    console.log(transcript)
     if (transcript) {
       postMessage(transcript)
       await processThought(transcript)
@@ -105,7 +143,7 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     ])
   }
 
-  const inputEl = listening ? (
+  const inputEl = recoding ? (
     <input
       type="text"
       readOnly
@@ -117,14 +155,14 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     <input
       type="text"
       className="chat-box-input"
-      readOnly={listening}
+      readOnly={recoding}
       value={message}
       disabled={loading}
       onChange={(e) => setMessage(e.target.value)}
     />
   )
 
-  const submitEl = listening ? (
+  const submitEl = recoding ? (
     <button type="button" className="chat-box-submit" disabled>
       ◉
     </button>
@@ -168,13 +206,19 @@ export const ChatBox: FC<IChatBoxProps> = () => {
 
   return (
     <div className="chat-box">
+      <RecognitionSwitch
+        listening={listening}
+        disabled={recoding}
+        recognitionHandle={recognitionHandle}
+      />
       <section className="chat-box-header">
         <button
           type="button"
-          className={listening ? "speech-btn rec" : "speech-btn wait"}
+          disabled={!listening}
+          className={recoding ? "speech-btn rec" : "speech-btn wait"}
           onClick={speechHandle}
         >
-          {listening ? "音声入力 終了 ■" : "音声入力 開始 ◉"}
+          {recoding ? "音声入力 終了 ■" : "音声入力 開始 ◉"}
         </button>
       </section>
       <section className="chat-box-body" id="chatBoxBody">
@@ -185,7 +229,7 @@ export const ChatBox: FC<IChatBoxProps> = () => {
             </div>
           )
         })}
-        <MicIcon visible={listening} />
+        <MicIcon visible={recoding} />
       </section>
       <section className="chat-box-footer">
         {inputEl}
