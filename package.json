@@ -18,6 +18,7 @@
     "regenerator-runtime": "^0.14.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.6.4",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^14.0.0",
@@ -37,6 +38,7 @@
     "jest-environment-jsdom": "^29.6.1",
     "postcss": "^8.4.27",
     "postcss-scss": "^4.0.6",
+    "react-test-renderer": "^18.2.0",
     "sass": "^1.64.1",
     "ts-jest": "^29.1.1",
     "typescript": "^5.0.2",
