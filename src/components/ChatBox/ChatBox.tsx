@@ -9,6 +9,7 @@ import { useSpeaker } from "../../hooks/useSpeaker.ts"
 import { messageHistoryType } from "../../types/index.ts"
 import { Spinner } from "../Spinner/Spinner.tsx"
 import { MicIcon } from "../MicIcon/MicIcon.tsx"
+import { ChatBoxSubmit } from "../ChatBoxSubmit/ChatBoxSubmit.tsx"
 
 interface IChatBoxProps {}
 
@@ -124,20 +125,6 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     />
   )
 
-  const submitEl = listening ? (
-    <button type="button" className="chat-box-submit" disabled>
-      ◉
-    </button>
-  ) : (
-    <button
-      type="button"
-      className="chat-box-submit"
-      onClick={() => processThought(message)}
-    >
-      ▶
-    </button>
-  )
-
   // 「⌘ + enter」 or 「ctrl + enter」 で 送信
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
@@ -189,7 +176,11 @@ export const ChatBox: FC<IChatBoxProps> = () => {
       </section>
       <section className="chat-box-footer">
         {inputEl}
-        {submitEl}
+        <ChatBoxSubmit
+          listening={listening}
+          message={message}
+          clickHandle={processThought}
+        />
       </section>
 
       <Spinner visible={loading} />
