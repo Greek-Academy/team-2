@@ -2,17 +2,17 @@ import { FC } from "react"
 import "./ChatBoxSubmit.scss"
 
 interface IChatBoxSubmitProps {
-  listening: boolean
+  recoding: boolean
   message: string
   clickHandle: (v: string) => void
 }
 
 export const ChatBoxSubmit: FC<IChatBoxSubmitProps> = ({
-  listening,
+  recoding,
   message,
   clickHandle,
 }) => {
-  return listening ? (
+  return recoding ? (
     <button type="button" className="chat-box-submit" disabled>
       ◉
     </button>

@@ -221,7 +221,7 @@ export const ChatBox: FC<IChatBoxProps> = () => {
       <section className="chat-box-footer">
         {inputEl}
         <ChatBoxSubmit
-          listening={listening}
+          recoding={recoding}
           message={message}
           clickHandle={processThought}
         />
