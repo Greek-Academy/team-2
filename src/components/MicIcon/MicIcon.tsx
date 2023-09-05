@@ -10,6 +10,7 @@ export const MicIcon: FC<IMicIconProps> = ({ visible }) => {
   return (
     <div
       className="backdrop"
+      data-testid="backdrop"
       style={{ visibility: visible ? "visible" : "hidden" }}
     >
       <img src={micSvg} className="icon" />
