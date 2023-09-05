@@ -9,6 +9,7 @@ export const Spinner: FC<ISpinnerProps> = ({ visible }) => {
   return (
     <section
       className="backdrop"
+      data-testid="backdrop"
       style={{ visibility: visible ? "visible" : "hidden" }}
     >
       <div className="loader loader-6">
