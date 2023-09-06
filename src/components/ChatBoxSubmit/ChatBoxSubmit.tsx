@@ -13,12 +13,18 @@ export const ChatBoxSubmit: FC<IChatBoxSubmitProps> = ({
   clickHandle,
 }) => {
   return recoding ? (
-    <button type="button" className="chat-box-submit" disabled>
+    <button
+      type="button"
+      data-testid="button"
+      className="chat-box-submit"
+      disabled
+    >
       ◉
     </button>
   ) : (
     <button
       type="button"
+      data-testid="button"
       className="chat-box-submit"
       onClick={() => clickHandle(message)}
     >
