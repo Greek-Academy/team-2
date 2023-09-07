@@ -13,6 +13,7 @@ describe('SpeakerButton', () => {
       state: true,
       handlePlay: handlePlayMock,
     })
+    
     render(<SpeakerButton stringToRead='abcde'/>)
     const speakerButton = screen.getByRole("button")
     expect(speakerButton).toBeEnabled()
@@ -33,7 +34,7 @@ test("Test when stringToRead is correctly entered and status is true.(handlePlay
     expect(handlePlayMock).toHaveBeenCalledWith("うなぎ二千円を３人で割り勘して下さい")
 })
 
-test("Test when status is TRUE and stringToRead is null.(Disabled)", () => {
+test("Test when status is TRUE and stringToRead is blank.(Disabled)", () => {
   const handlePlayMock = jest.fn()
   mockUseSpeaker.mockReturnValueOnce({
     state: true,
@@ -42,8 +43,7 @@ test("Test when status is TRUE and stringToRead is null.(Disabled)", () => {
 
   render(<SpeakerButton stringToRead="" />)
   const speakerButton = screen.getByRole("button")
-  fireEvent.click(speakerButton)
-
+  
   expect(speakerButton).toBeDisabled()
 })
 
@@ -56,8 +56,7 @@ test("Test when status is FALSE and stringToRead contains a string.(Disabled)", 
 
   render(<SpeakerButton stringToRead="あいうえお" />)
   const speakerButton = screen.getByRole("button")
-  fireEvent.click(speakerButton)
-
+  
   expect(speakerButton).toBeDisabled()
 })
 
@@ -70,12 +69,11 @@ test("Test when status is FALSE and stringToRead contains a string.(Button Label
 
   render(<SpeakerButton stringToRead="あいうえお" />)
   const speakerButton = screen.getByRole("button")
-  fireEvent.click(speakerButton)
-
+  
   expect(speakerButton).toHaveTextContent("音声出力非対応")
 })
 
-test("Test when status is TRUE and stringToRead is null.(Button Label)", () => {
+test("Test when status is TRUE and stringToRead is blank.(Button Label)", () => {
   const handlePlayMock = jest.fn()
   mockUseSpeaker.mockReturnValueOnce({
     state: true,
@@ -84,8 +82,7 @@ test("Test when status is TRUE and stringToRead is null.(Button Label)", () => {
 
   render(<SpeakerButton stringToRead="" />)
   const speakerButton = screen.getByRole("button")
-  fireEvent.click(speakerButton)
-
+  
   expect(speakerButton).toHaveTextContent("音声出力非対応")
 })
 
@@ -100,5 +97,5 @@ test("Test when stringToRead is correctly entered and status is true.(Button Lab
   const speakerButton = screen.getByRole("button")
   fireEvent.click(speakerButton)
 
-  expect(speakerButton).toHaveTextContent("音声テスト")
+  expect(speakerButton).toHaveTextContent("音声読上げ")
 })
