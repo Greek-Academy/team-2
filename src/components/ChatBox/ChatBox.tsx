@@ -11,6 +11,7 @@ import { Spinner } from "../Spinner/Spinner.tsx"
 import { MicIcon } from "../MicIcon/MicIcon.tsx"
 import { ChatBoxSubmit } from "../ChatBoxSubmit/ChatBoxSubmit.tsx"
 import { RecognitionSwitch } from "../RecognitionSwitch/RecognitionSwitch.tsx"
+import { ChatBoxInput } from "../ChatBoxInput/ChatBoxInput.tsx"
 
 interface IChatBoxProps {}
 
@@ -144,25 +145,6 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     ])
   }
 
-  const inputEl = recoding ? (
-    <input
-      type="text"
-      readOnly
-      value={transcript}
-      className="chat-box-input"
-      style={{ pointerEvents: "none" }}
-    />
-  ) : (
-    <input
-      type="text"
-      className="chat-box-input"
-      readOnly={recoding}
-      value={message}
-      disabled={loading}
-      onChange={(e) => setMessage(e.target.value)}
-    />
-  )
-
   // 「⌘ + enter」 or 「ctrl + enter」 で 送信
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
@@ -219,7 +201,13 @@ export const ChatBox: FC<IChatBoxProps> = () => {
         <MicIcon visible={recoding} />
       </section>
       <section className="chat-box-footer">
-        {inputEl}
+        <ChatBoxInput
+          recoding={recoding}
+          loading={loading}
+          transcript={transcript}
+          message={message}
+          changeHandle={setMessage}
+        />
         <ChatBoxSubmit
           recoding={recoding}
           message={message}
