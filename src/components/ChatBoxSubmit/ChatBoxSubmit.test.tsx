@@ -1,23 +1,29 @@
-import { render } from "@testing-library/react"
+import { render, fireEvent } from "@testing-library/react"
 import { ChatBoxSubmit } from "./ChatBoxSubmit"
 import "@testing-library/jest-dom/extend-expect"
 
-const mockFunc = (m: string): void => {
-  console.log(m)
+// イベント発火検証用のダミー関数
+window.alert = jest.fn()
+const mockFunc = (v: string): void => {
+  window.alert(v)
 }
 
 describe("ChatBoxSubmit", () => {
-  it("recoding TRUE CASE : 録音ボタン", () => {
+  it("recoding true, label 録音ボタン", () => {
     const { getByText, getByTestId } = render(
-      <ChatBoxSubmit recoding={true} message="ok" clickHandle={mockFunc} />
+      <ChatBoxSubmit recoding={true} message="msg" clickHandle={mockFunc} />
     )
     expect(getByText("◉")).toBeInTheDocument()
     expect(getByTestId("button")).toBeDisabled()
   })
-  it("recoding FALSE CASE : 再生ボタン", () => {
-    const { getByText } = render(
-      <ChatBoxSubmit recoding={false} message="ok" clickHandle={mockFunc} />
+  it("recoding false, label 再生ボタン, check click event", () => {
+    const { getByText, getByTestId } = render(
+      <ChatBoxSubmit recoding={false} message="msg" clickHandle={mockFunc} />
     )
     expect(getByText("▶")).toBeInTheDocument()
+
+    // click eventの発火確認
+    fireEvent.click(getByTestId("button"))
+    expect(window.alert).toHaveBeenCalledWith("msg")
   })
 })
