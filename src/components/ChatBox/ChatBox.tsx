@@ -12,8 +12,14 @@ import { ChatBoxSubmit } from "../ChatBoxSubmit/ChatBoxSubmit.tsx"
 import { RecognitionSwitch } from "../RecognitionSwitch/RecognitionSwitch.tsx"
 import { ChatBoxInput } from "../ChatBoxInput/ChatBoxInput.tsx"
 import { useSubmitter, useSpeaker } from "../../hooks/index.ts"
+import { ChatGpt } from "../../api/ChatGpt/ChatGpt.ts"
 
 interface IChatBoxProps {}
+
+enum CommandTypes {
+  start = "スタート",
+  stop = "ストップ",
+}
 
 export const ChatBox: FC<IChatBoxProps> = () => {
   const [message, setMessage] = useState("")
@@ -23,6 +29,8 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     messageHistoryType[]
   >([])
 
+  const api = ChatGpt.makeInstance()
+
   const processThought = async (msg: string) => {
     if (!msg) {
       return
@@ -31,18 +39,7 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     resetMessage()
     setLoading(true)
     try {
-      const response = await fetch(
-        "http://localhost:8000/agents/conversation",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: msg,
-          }),
-        }
-      )
+      const response = await api.conversation(msg)
 
       if (response.ok) {
         const data = await response.json()
@@ -65,28 +62,25 @@ export const ChatBox: FC<IChatBoxProps> = () => {
 
   const commands = [
     {
-      command: "スタート",
+      command: CommandTypes.start,
       matchInterim: true,
       callback: () => {
         if (recoding) {
           return
         }
-        console.log("録音開始")
         resetTranscript()
         setRecoding(true)
       },
     },
     {
-      command: "ストップ",
+      command: CommandTypes.stop,
       matchInterim: true,
-      callback: () => {
+      callback: (command: string) => {
         if (!recoding) {
           return
         }
         setRecoding(false)
-        console.log("録音終了")
-        const input = transcript.replace("/(*.)ストップ$/u", "$1")
-        console.log(input)
+        const input = transcript.replace("/(*.)" + command + "$/u", "$1")
         processThought(input)
         resetTranscript()
       },
