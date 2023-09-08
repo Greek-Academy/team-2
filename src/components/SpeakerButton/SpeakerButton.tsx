@@ -9,6 +9,6 @@ export const SpeakerButton = (props: SpeakerButtonProps) => {
 
     return (
         <button type="button" disabled={disabled}
-                onClick={() => handlePlay(props.stringToRead || "テスト")}>{disabled ? '音声出力非対応' : '音声テスト'}</button>
+                onClick={() => handlePlay(props.stringToRead || "テスト")}>{disabled ? '音声出力非対応' : '音声読上げ'}</button>
     );
 };
