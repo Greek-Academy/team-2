@@ -5,13 +5,13 @@ import { useState } from "react"
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition"
-import { useSpeaker } from "../../hooks/useSpeaker.ts"
 import { messageHistoryType } from "../../types/index.ts"
 import { Spinner } from "../Spinner/Spinner.tsx"
 import { MicIcon } from "../MicIcon/MicIcon.tsx"
 import { ChatBoxSubmit } from "../ChatBoxSubmit/ChatBoxSubmit.tsx"
 import { RecognitionSwitch } from "../RecognitionSwitch/RecognitionSwitch.tsx"
 import { ChatBoxInput } from "../ChatBoxInput/ChatBoxInput.tsx"
+import { useSubmitter, useSpeaker } from "../../hooks/index.ts"
 
 interface IChatBoxProps {}
 
@@ -22,7 +22,6 @@ export const ChatBox: FC<IChatBoxProps> = () => {
   const [messageHistories, setMessageHistories] = useState<
     messageHistoryType[]
   >([])
-  const { handlePlay } = useSpeaker()
 
   const processThought = async (msg: string) => {
     if (!msg) {
@@ -60,6 +59,9 @@ export const ChatBox: FC<IChatBoxProps> = () => {
       setLoading(false) // Set loading to false when fetch completes
     }
   }
+
+  const { handlePlay } = useSpeaker()
+  const { handleKeyDown } = useSubmitter(processThought)
 
   const commands = [
     {
@@ -145,29 +147,17 @@ export const ChatBox: FC<IChatBoxProps> = () => {
     ])
   }
 
-  // 「⌘ + enter」 or 「ctrl + enter」 で 送信
-  const handleKeyDown = (e: KeyboardEvent) => {
-    switch (e.key) {
-      case "Enter":
-        // 文字入力途中であれば処理スキップ
-        if (e.isComposing) {
-          break
-        }
-        if ((e.metaKey || e.ctrlKey) && message) {
-          e.preventDefault()
-          processThought(message)
-        }
-        break
-
-      default:
-        break
+  const handleKeyDownHook = (e: KeyboardEvent) => {
+    if (message.length <= 0) {
+      return
     }
+    handleKeyDown(e, message)
   }
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [handleKeyDown])
+    document.addEventListener("keydown", handleKeyDownHook)
+    return () => document.removeEventListener("keydown", handleKeyDownHook)
+  }, [handleKeyDownHook])
 
   useEffect(() => {
     scrollToCurrentChatBox()
