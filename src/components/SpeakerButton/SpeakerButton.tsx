@@ -13,7 +13,7 @@ export const SpeakerButton = (props: SpeakerButtonProps) => {
       disabled={disabled}
       onClick={() => handlePlay(props.stringToRead || "テスト")}
     >
-      {disabled ? "音声出力非対応" : "音声テスト"}
+      {disabled ? "音声出力非対応" : "音声読上げ"}
     </button>
   )
 }
