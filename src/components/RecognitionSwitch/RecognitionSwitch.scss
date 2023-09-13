@@ -1,0 +1,53 @@
+.recognition-switch {
+  position: fixed;
+  top: 30px;
+  translate: -50%;
+  height: 36px;
+  width: 24px;
+  background-color: #ccc;
+  cursor: pointer;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: #ccc;
+    translate: -50% 0;
+  }
+  &::before {
+    left: 0;
+  }
+  &::after {
+    left: 100%;
+  }
+  &.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  > input[type="checkbox"] + label {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    background-color: #aaa;
+    translate: -50%;
+    z-index: 1;
+    border: 3px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+  > input[type="checkbox"]:checked + label {
+    background-color: #c00;
+    color: #fff;
+    left: 100%;
+  }
+}
